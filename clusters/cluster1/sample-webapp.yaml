@@ -5,6 +5,11 @@ metadata:
   namespace: flux-system
 spec:
   interval: 1m
-  url: https://github.com/gmsantos3/portfolio-repo/tree/flux-managed-branch/sample-web-app/sample-web-app
+  url: https://github.com/gmsantos3/portfolio-repo/
   ref:
     branch: flux-managed-branch
+  ignore: |
+    # exclude all
+    /*
+    # include charts directory
+    !/charts/  
