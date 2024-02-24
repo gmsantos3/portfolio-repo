@@ -1,0 +1,9 @@
+./terraform
+*.tfvars
+*.tfstate.backup
+.terraformrc
+.terraformrc.json
+*gha-creds*
+*plan*
+*.terraform.lock*
+certificate-resources

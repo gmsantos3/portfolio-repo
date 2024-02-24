@@ -1,0 +1,107 @@
+name: Terraform Plan
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - terraform/*      
+
+jobs:
+  plan:
+    if: "contains(github.event.head_commit.message, 'terraform')"
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - id: 'auth'
+        name: 'Authenticate to Google Cloud'
+        uses: 'google-github-actions/auth@v1'
+        with:
+          credentials_json: '${{ secrets.GOOGLE_SERVICE_ACCOUNT }}'
+
+      - name: Install Terraform
+        uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_version: "1.4.6"
+
+      - name: Terraform Init
+        working-directory: ./terraform
+        run: ls && terraform init
+
+      - name: Terraform Plan
+        working-directory: ./terraform
+        run: terraform plan -out=plan
+
+      - name: Save Terraform Plan
+        uses: actions/upload-artifact@v2
+        with:
+          name: plan
+          path: ./terraform/plan
+
+  apply:
+    environment: 'terraform'
+    needs: plan
+    if: success()
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - id: 'auth'
+        name: 'Authenticate to Google Cloud'
+        uses: 'google-github-actions/auth@v1'
+        with:
+          credentials_json: '${{ secrets.GOOGLE_SERVICE_ACCOUNT }}'
+
+
+      - name: Install Terraform
+        uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_version: "1.4.6"
+
+      - name: Download Terraform Plan
+        uses: actions/download-artifact@v2
+        with:
+          name: plan
+          path: ./terraform
+
+      - name: Terraform Init
+        working-directory: ./terraform
+        run: ls && terraform init
+
+      - name: Terraform Apply
+        working-directory: ./terraform
+        run: terraform apply plan
+  
+  destroy: 
+    if: "contains(github.event.head_commit.message, 'destroy')"
+    runs-on: ubuntu-latest
+    environment: 'terraform'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - id: 'auth'
+        name: 'Authenticate to Google Cloud'
+        uses: 'google-github-actions/auth@v1'
+        with:
+          credentials_json: '${{ secrets.GOOGLE_SERVICE_ACCOUNT }}'
+
+      - name: Install Terraform
+        uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_version: "1.4.6"
+
+      - name: Terraform Init
+        working-directory: ./terraform
+        run: terraform init
+
+      - name: Terraform Apply
+        working-directory: ./terraform
+        run: terraform destroy --auto-approve
