@@ -5,7 +5,7 @@ metadata:
   name: sample-webapp
   namespace: webapp
 spec:
-  interval: 30s
+  interval: 60s
   url: https://github.com/gmsantos3/portfolio-repo/
   ref:
     branch: flux-managed-branch
