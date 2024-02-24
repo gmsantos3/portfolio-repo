@@ -1,0 +1,16 @@
+---
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: GitRepository
+metadata:
+  name: webapp-repo
+  namespace: webapp
+spec:
+  interval: 1m
+  url: https://github.com/gmsantos3/portfolio-repo
+  ref:
+    branch: flux-managed-branch
+  ignore: |-
+    # exclude all
+    /*
+    # include charts directory
+    !/charts/
