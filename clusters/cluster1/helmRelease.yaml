@@ -16,4 +16,4 @@ spec:
         namespace: webapp
       interval: 1m
   values:
-    replicaCount: 2
+    replicaCount: 1
