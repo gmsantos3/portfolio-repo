@@ -28,7 +28,7 @@ spec:
   interval: 1m
   chart:
     spec:
-      chart: charts/sample-web-app
+      chart: charts/nginx-ingress
       sourceRef:
         kind: GitRepository
         name: webapp-repo
@@ -47,7 +47,7 @@ spec:
   interval: 1m
   chart:
     spec:
-      chart: charts/nginx-ingress
+      chart: charts/cert-manager
       sourceRef:
         kind: GitRepository
         name: webapp-repo
