@@ -9,6 +9,6 @@ patches:
   - target:
       kind: Deployment
     patch: | 
-      - op: replace
-        path: /spec/template/spec/containers/*/resources/requests/cpu
+      - op: add
+        path: /spec/template/spec/containers/0/resources/requests/cpu
         value: 10m
