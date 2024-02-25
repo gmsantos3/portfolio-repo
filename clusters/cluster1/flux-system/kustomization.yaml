@@ -4,3 +4,11 @@ resources:
 - gotk-components.yaml
 - gotk-sync.yaml
 - helmRepository.yaml
+patches:
+  # patch to modify resources.requests.cpu
+  - target:
+      kind: Deployment
+    patch: | 
+      - op: replace
+        path: /spec/template/spec/containers/*/resources/requests/cpu
+        value: 10m
